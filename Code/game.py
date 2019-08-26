@@ -18,7 +18,9 @@ class Store():
         
     
     def write_to_csv(self):
-        pass
+        parameter_score =  [[self.parameter[i],self.score[i]] for i in range(len(self.score)) ]
+        df = pd.DataFrame(data=parameter_score,columns=['parameter','score'])
+        df.to_csv('Storage/parameter_score_pair.csv',index=None)
 
 class Game():
     def __init__(self):
@@ -59,7 +61,7 @@ class Game():
     @staticmethod
     def get_score(parameter):
         pipe_list = parameter_to_pipeline(parameter,search_space_dic)
-        cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
+        cv = ShuffleSplit(n_splits=5, test_size=0.3, random_state=0)
         score = cross_val_score(pipe_list,X,y,cv=cv)
         return score.mean()  
         

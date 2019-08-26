@@ -17,8 +17,8 @@ def load_dataset(dataset_name):
     y = np.array(df.iloc[:,-1])
     return X,y
 X,y = load_dataset("Datasets/dataset_38_sick_le.csv")
-X = X[:1000,:]
-y = y[:1000]
+#X = X[:1000,:]
+#y = y[:1000]
 
 ###########################
 ### 2. Set up Pipeline
