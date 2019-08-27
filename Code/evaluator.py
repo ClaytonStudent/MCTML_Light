@@ -6,6 +6,7 @@ import copy
 from Code.setup import search_space_values,search_space_names,search_space_dic
 
 
+    
 
 #######################
 ## 1. Load Dataset
@@ -103,6 +104,20 @@ def pipeline_to_score(pipe):
     cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
     score = cross_val_score(pipe,X,y,cv=cv)
     return score.mean()
+
+def pipeline_to_score_with_std(pipe):
+    cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
+    score = cross_val_score(pipe,X,y,cv=cv)
+    
+    #score = score_minius_k_std(score,k=1)  用来计算score = 平均值-K倍标准差 体现pipeline的稳定性
+    return score.mean()
+
+import numpy as np
+def score_minius_k_std(score,k=1):
+    return np.mean(score) - k*np.std(score)
+
+
+
     
     
 ###################################
