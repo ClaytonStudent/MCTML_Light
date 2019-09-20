@@ -1,7 +1,4 @@
 from state import State
-#from state_with_feature import State
-#from Code.mct import MCT
-from evaluator import get_next_state
 import numpy as np
 import random
 
@@ -59,11 +56,6 @@ class TreeNode(object):
     def check_node_name(self):
         return type(self._name)==tuple
     
-    def check_for_tuple(self):
-        if list(self._children.values()) != []:
-            if type(list(self._children.keys())[0]) == tuple:
-                for key,value in self._children.items():
-                    print("The visit time of {} is {}".format(key,value._n_visits))
     
             
         

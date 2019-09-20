@@ -20,7 +20,7 @@ param_dist_et = {'criterion':['gini','entropy'],
              'min_samples_split':[2,10,20]}
 
 from sklearn.neighbors import KNeighborsClassifier
-param_dist_knn = {'n_neighbors':[3,5,10],
+param_dist_knn = {'n_neighbors':[3,5,8,10],
              'weights':["uniform", "distance"],
              'p':[1,2]}
 
@@ -29,9 +29,12 @@ param_dist_lda = {'n_components':[1,10,100],
              'tol':[0.001,0.01,0.1]}
              
 from sklearn.linear_model import SGDClassifier
-param_dist_sgd = {'loss':["hinge", "log", "modified_huber", "squared_hinge", "perceptron"],
+param_dist_sgd = {'loss':["hinge", "log", "perceptron"],
              'penalty':["l1", "l2", "elasticnet"],
-             'alpha':[0.01,0.1,1.0]}
+             'alpha':[0.01,1.0]}
+#param_dist_sgd = {'loss':["hinge", "log", "modified_huber", "squared_hinge", "perceptron"],
+#             'penalty':["l1", "l2", "elasticnet"],
+#             'alpha':[0.01,0.1,1.0]}
               
 from sklearn.svm import LinearSVC
 param_dist_lsvc = {'C':[0.01,0.1,1.0,10.0,100.0],
@@ -46,9 +49,9 @@ param_dist_mnb = {'alpha':[0.01,0.1,1.0,10],
              'fit_prior':[True,False]}
 
 from sklearn.linear_model import PassiveAggressiveClassifier
-param_dist_pac = {'C':[0.001,0.01,0.1,1.0],
+param_dist_pac = {'C':[0.01,0.1,1.0],
              'loss':["hinge", "squared_hinge"],
-             'tol':[0.001,0.01,0.1,1.0]}    
+             'tol':[0.01,0.1,1.0]}    
              
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 param_dist_qda = {'reg_param':[0.0,0.5,1.0]}
@@ -56,90 +59,10 @@ param_dist_qda = {'reg_param':[0.0,0.5,1.0]}
 from sklearn.ensemble import RandomForestClassifier
 param_dist_rf = {'criterion':["gini", "entropy"],
              'n_estimators':[10,50,100]}
-
-
-
-class Ada():
-    def __init__(self):
-        self.name = 'AdaBoostClassifier'
-        self.model = AdaBoostClassifier()
-        self.parameter = param_dist_ada
-        self.hyper_name = list(self.parameter.keys())
-class Ber():
-    def __init__(self):
-        self.name = 'BernoulliNB'
-        self.model = BernoulliNB()
-        self.parameter = param_dist_ber
-        self.hyper_name = list(self.parameter.keys())
-class DT():
-    def __init__(self):
-        self.name = 'DecisionTree'
-        self.model = DecisionTreeClassifier()
-        self.parameter = param_dist_dt
-        self.hyper_name = list(self.parameter.keys())
-class ET():
-    def __init__(self):
-        self.name = 'ExtraTree'
-        self.model = ExtraTreeClassifier()
-        self.parameter = param_dist_et
-        self.hyper_name = list(self.parameter.keys())
-class Knn():
-    def __init__(self):
-        self.name = 'KNN'
-        self.model = KNeighborsClassifier()
-        self.parameter = param_dist_knn
-        self.hyper_name = list(self.parameter.keys())
-class Lda():
-    def __init__(self):
-        self.name = 'LDA'
-        self.model = LinearDiscriminantAnalysis()
-        self.parameter = param_dist_lda
-        self.hyper_name = list(self.parameter.keys())
-class Sgd():
-    def __init__(self):
-        self.name = 'SGD'
-        self.model = SGDClassifier()
-        self.parameter = param_dist_sgd
-        self.hyper_name = list(self.parameter.keys())
-class Lsvc():
-    def __init__(self):
-        self.name = 'LSVC'
-        self.model = LinearSVC()
-        self.parameter = param_dist_lsvc
-        self.hyper_name = list(self.parameter.keys())
-class Svc():
-    def __init__(self):
-        self.name = 'SVC'
-        self.model = SVC()
-        self.parameter = param_dist_svc
-        self.hyper_name = list(self.parameter.keys())
-class Mnb():
-    def __init__(self):
-        self.name = 'MultinomialNB'
-        self.model = MultinomialNB()
-        self.parameter = param_dist_mnb
-        self.hyper_name = list(self.parameter.keys())
-class Pac():
-    def __init__(self):
-        self.name = 'PAC'
-        self.model = PassiveAggressiveClassifier()
-        self.parameter = param_dist_pac
-        self.hyper_name = list(self.parameter.keys())
-class Qda():
-    def __init__(self):
-        self.name = 'QDA'
-        self.model = QuadraticDiscriminantAnalysis()
-        self.parameter = param_dist_qda
-        self.hyper_name = list(self.parameter.keys())
-class Rf():
-    def __init__(self):
-        self.name = 'RF'
-        self.model = RandomForestClassifier()
-        self.parameter = param_dist_rf
-        self.hyper_name = list(self.parameter.keys())
     
-names = ['AdaBoostClassifier','BernoulliNB','DecisionTree','ExtraTree',
-        'LDA','SGD','LSVC','SVC','PAC','QDA','RF','KNN']
+#names = ['AdaBoostClassifier','BernoulliNB','DecisionTree','ExtraTree',
+#        'LDA','SGD','LSVC','SVC','PAC','QDA','RF','KNN']
+names = ['AdaBoostClassifier','DecisionTree','KNN','SGD','PAC']
 
 name_parameter = {'AdaBoostClassifier':param_dist_ada,
                  'BernoulliNB':param_dist_ber,

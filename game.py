@@ -1,8 +1,8 @@
-from evaluator import parameter_to_pipeline,X,y,get_index_of_zeros
-from setup import search_space,search_space_dic
+from evaluator import X,y
+#from setup import search_space,search_space_dic
 from sklearn.model_selection import ShuffleSplit,cross_val_score
 import random
-from collections import Counter
+#from collections import Counter
 
 
 
