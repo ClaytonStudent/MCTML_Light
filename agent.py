@@ -8,7 +8,7 @@ from operator import itemgetter
 from evaluator import rollout_policy_fn,get_score
 from functions import extract_training_data
 from network import run_nn
-
+import numpy as np
             
 class MCTS(object):
 
@@ -41,13 +41,14 @@ class MCTS(object):
         for n in range(self._n_playout):
             print("Playout: ",n+1)
             self._playout()
-            
-            if n%21 == 19:
-                X,y = extract_training_data(self._storage.ps,self._mct.nodes)
-                run_nn(X,y,'save/model.h5')
-                
-          
-            
+            if n%20 == 19:
+                X,y = extract_training_data(self._mct.nodes)
+                print(X.shape)
+                if X.shape[0] > 3:
+                    print('Training the network')
+                    np.save('X.npy',X)
+                    np.save('y.npy',y)
+                    #run_nn(X,y,'save/probs_model.h5')
     def _evaluate_rollout(self, node):
         # 随机采样其他的值
         for i in range(15):

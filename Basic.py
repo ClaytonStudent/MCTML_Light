@@ -92,5 +92,3 @@ name_model = {'AdaBoostClassifier':AdaBoostClassifier(),
                  'QDA':QuadraticDiscriminantAnalysis(),
                  'RF':RandomForestClassifier()}
 
-from sklearn.decomposition import PCA,FastICA,KernelPCA
-features = [PCA(),FastICA(),KernelPCA()]

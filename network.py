@@ -7,9 +7,9 @@ import os
 
 def build_model():
     model = Sequential()
-    model.add(Dense(12, input_dim=4, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(8, activation='relu'))
-    model.add(Dense(1, activation='linear'))
+    model.add(Dense(16, input_dim=4, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(12, activation='relu'))
+    model.add(Dense(8, activation='softmax'))
     model.compile(loss='mse', optimizer='adam')#, metrics=['mse','mae'])
     return model
 
