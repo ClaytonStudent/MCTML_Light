@@ -35,6 +35,10 @@ def run_nn(X,y,fname):
     if eva_loss <= old_loss:
         print('Saving the new model')
         save_model(model,fname)
+
+def import_model(fname):
+    model = load_model(fname)
+    return model
         
 def predict(model,X):
     X = X.reshape((1,-1))

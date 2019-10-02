@@ -22,3 +22,7 @@ def extract_training_data(path,nodes):
     X = [convert_state(sample[0]) for sample in path] +  [convert_state(node.state.path) for node in nodes if node._Q>0]
     y = [sample[1] for sample in path] + [node._Q for node in nodes if node._Q>0] 
     return np.array(X),np.array(y)
+
+# 检查某一个节点的所有子节点被访问次数
+def child_visit_times(node):
+    return [i._n_visits for i in node._children.values()]
