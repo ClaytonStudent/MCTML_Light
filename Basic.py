@@ -57,9 +57,9 @@ from sklearn.ensemble import RandomForestClassifier
 param_dist_rf = {'criterion':["gini", "entropy"],
              'n_estimators':[i for i in range(10,100) if i%10==0]}   # (10,100)
     
-names = ['AdaBoostClassifier','BernoulliNB','DecisionTree','ExtraTree',
-        'LDA','SGD','LSVC','SVC','PAC','RF','KNN'] # without QDA(only 1 hyper parameter)
-
+#names = ['AdaBoostClassifier','BernoulliNB','DecisionTree','ExtraTree',
+#        'LDA','SGD','LSVC','SVC','PAC','RF','KNN'] # without QDA(only 1 hyper parameter)
+names = ['LDA','RF']
 name_parameter = {'AdaBoostClassifier':param_dist_ada,
                  'BernoulliNB':param_dist_ber,
                  'DecisionTree':param_dist_dt,

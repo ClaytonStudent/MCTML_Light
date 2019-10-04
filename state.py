@@ -31,4 +31,9 @@ class State:
         self.path += [action]
         self.actions = self.update_action(action)
         self.level += 1
+    
         
+        
+    #def delete_state_info(self,index):
+    #    self.path = self.path[:index+1] + self.path[index+2:]
+    #    self.lvele -=1

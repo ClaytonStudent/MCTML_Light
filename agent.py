@@ -2,15 +2,13 @@ from mct import MCT
 from tree import TreeNode
 from game import Game,Store
 from evaluator import rollout_policy_fn,get_score,fname
-from functions import extract_training_data,child_visit_times
+from functions import extract_training_data,child_visit_times,find_useless
 from network import run_nn
 
 import time
 import copy
 import random
 from operator import itemgetter
-
-
 
 class MCTS(object):
 
@@ -30,14 +28,14 @@ class MCTS(object):
                 break
             # Original Value
             #action, node = node.select(self._c_puct)
-            action, node = node.select(3)
+            #action, node = node.select(3)
             
-            ###  change the value of C to balance     
-            #if min(child_visit_times(node))>0:
-            #    action, node = node.select(3)
-            #else:
-            #    action, node = node.select(self._c_puct)
-        avaiables_actions = Game.get_avaiable_actions(node.state)        
+            ###  1. change the value of C to balance     
+            if min(child_visit_times(node))>0:
+                action, node = node.select(3)
+            else:
+                action, node = node.select(self._c_puct)
+        avaiables_actions = node.state.actions        
         action_probs = self._policy(avaiables_actions) 
         end = Game.game_end(node.state)
         if not end and avaiables_actions is not None:
@@ -57,12 +55,12 @@ class MCTS(object):
             n = n+1
             self._playout()
             
-            ### store training data for network
+            ### 2.store training data for network
             #if n%20 == 19:
             #    X,y = extract_training_data(self._storage.ps,self._mct.nodes)
             #    run_nn(X,y,fname)
-            if n % 50 == 49:
-                print('Hier we analyse paths and delete layers, reduce search space')
+            #if n % 50 == 49:
+            #    print('Hier we analyse paths and delete layers, reduce search space')
             
             
     def _evaluate_rollout(self, node):
@@ -71,12 +69,17 @@ class MCTS(object):
             end = Game.game_end(node.state)
             if end:
                 score = get_score(node.state.path)
+                
+                ### 3.Get score from history if the path already exisit ###
+                #if node.state.path in self._storage.parameter:
+                #    print('Already visited sampling')
+                #    score = self._storage.get_score_from_history(node.state.path)
+                #else:
+                #    score = get_score(node.state.path)
                 break
             action_probs = rollout_policy_fn(node.state.actions)
             max_action = max(action_probs, key=itemgetter(1))[0]
             node.state.update_self(max_action)
-        else:
-            score = 0
         self._storage.add_one_record(node.state.path,score)
         return score
     

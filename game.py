@@ -1,10 +1,6 @@
 from evaluator import X,y
-#from setup import search_space,search_space_dic
 from sklearn.model_selection import ShuffleSplit,cross_val_score
 import random
-#from collections import Counter
-
-
 
 class Store():
     def __init__(self):
@@ -16,6 +12,14 @@ class Store():
         self.parameter.append(parameter)
         self.score.append(score)
         self.ps.append((parameter,score))
+        
+    def get_score_from_history(self,parameter):
+        index = self.parameter.index(parameter)
+        return self.score[index]
+    
+    def check_if_useless(parameter,score):
+        pass
+        
     
 
 class Game():
@@ -39,13 +43,7 @@ class Game():
         else:
             return False
     
-    
-    @staticmethod
-    def get_score(parameter):
-        pipe_list = parameter_to_pipeline(parameter,search_space_dic)
-        cv = ShuffleSplit(n_splits=5, test_size=0.3, random_state=0)
-        score = cross_val_score(pipe_list,X,y,cv=cv)
-        return score.mean()  
+   
         
 
         
