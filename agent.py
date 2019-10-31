@@ -53,9 +53,7 @@ class MCTS(object):
                     k= n
                     print('{}th min, best score is {}'.format(k,self.find_intermediate()))
                     save_score(k,self.find_intermediate())
-
                 self._playout()
-        #self.store_intermediate(numbers,intermediate,name)
             
     def delete_one_pipeline(self,leaf_node):
         end_state = leaf_node._state.state
