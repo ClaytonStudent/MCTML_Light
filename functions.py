@@ -1,28 +1,7 @@
-from Basic import names,name_parameter
+import copy
+import random
 import numpy as np
-# 把state.path或者sample 换成等长的数值型表示
-def convert_state(path):
-    if path is None or len(path) <=0:
-        print('The state is something wrong!')
-        return None
-    else:
-        state = [-1,-1,-1,-1]
-        clf_ind = names.index(path[0])
-        state[0] = clf_ind
-        params = list(name_parameter[path[0]].values())
-        for i in range(len(path[1:])):
-            param_index = params[i].index(path[i+1])
-            state[i+1] = param_index
-    state = [i+1 for i in state]
-    return state
-
-
-# 提取出训练数据 state：Q 和 sample：score
-def extract_training_data(path,nodes):
-    X = [convert_state(sample[0]) for sample in path] +  [convert_state(node.state.path) for node in nodes if node._Q>0]
-    y = [sample[1] for sample in path] + [node._Q for node in nodes if node._Q>0] 
-    return np.array(X),np.array(y)
-
+from search_space import check_list
 # 检查某一个节点的所有子节点被访问次数
 def child_visit_times(node):
     return [i._n_visits for i in node._children.values()]
@@ -34,30 +13,73 @@ def find_best(agent):
     best = paths[scores.index(max(scores))]
     return best[0],best[1]
 
+def save_score(k,score):
+    text_file = open("Storage/model.txt", "a")
+    text_file.write("Min:{}, Score:{}".format(k,score) + '\n')
+    text_file.close()
 
-# find the useless hyperparameter and delete the nodes from mcts tree
-def find_useless(paths,path): 
-    for p in paths:
-        if p[1] == path[1] and p[0][0] == path[0][0]:
-            clf_hyper = find_one_difference(p[0],path[0])
-            if clf_hyper[0] != False and clf_hyper not in useless:
-                delete_nodes(clf_hyper)
-
-def find_one_difference(p1,p2):
-    k = [True if p1[i]!=p2[i] else False for i in range(1,len(p1))]
-    if sum(k) == 1:
-        return p1[0],k.index(True)
-    else:
-        return False,False
-
-def delete_nodes(clf_hyper):
-    clf_name = clf_hyper[0]
-    index = clf_hyper[1]
-    hyper = list(name_parameter[clf_name].keys())[index]
-    parent_nodes = [node for node in nodes if node.state.path[0]==clf_name and node.state.level == index+1]
-    random_action = random.choice(name_parameter[clf_name][hyper])
-    name_parameter[clf_name][hyper] = [random_action]
-    for parent in parent_nodes:
-        parent._children = {random_action:parent._children[random_action]}
-        parent.state.actions = [random_action]
+def save_model(name,params,score):
+    text_file = open("Storage/model.txt", "a")
+    text_file.write("Name:{}".format(name) + '\n' + 
+                    "Best Parameter: {} ".format(params) + '\n' + 
+                    "Best Score: {}".format(score) + '\n' + '\n' + '\n')
+    text_file.close()
     
+    
+    
+def game_end(avaiables_actions):
+    if avaiables_actions == None:
+        return True
+    else:
+        return False
+    
+    
+# related with progressive windowing
+def has_continues(node):
+    if node._state.depth >=3 and window(node._n_visits) and node._n_visits >10:
+        selected_method = check_list[node._state.state[node._state.depth-3]]
+        is_continue,action = generate_random_sample(selected_method.hyper_parameters)
+        if is_continue:
+            node.add_new_node(action)
+
+def generate_random_sample(params):
+    is_continue = False
+    params = copy.deepcopy(params)
+    for i,j in params.items():
+        if type(j)==tuple and type(j[0])== float:
+            is_continue = True
+            k = random.uniform(j[0],j[1])
+        elif type(j)==tuple and type(j[0])== int:
+            is_continue = True
+            k = int(random.sample(range(j[0],j[1]),1)[0])
+        else:
+            k = random.choice(j)
+        params[i] = k
+    return is_continue,tuple((p,v) for p,v in params.items())
+
+def window(N):
+    C = 4
+    alpha = 0.3
+    if int(C*(N+1)**alpha) > int(C*(N)**alpha):
+        return True
+    else:
+        return False
+    
+ 
+    
+# related with NN
+def convert_state(state):
+    X = [0,0,0,0,0,0]
+    for i in range(3):
+        X[i] = list(check_list.keys()).index(state[i]) 
+        if  state[i+3] in check_list[state[i]].search_space:
+            X[i+3] = check_list[state[i]].search_space.index(state[i+3])
+        else:
+            X[i+3] = len(check_list[state[i]].search_space) + random.randint(0,10)
+    return X
+
+def extract_training_data(ps):
+    X = [convert_state(sample[0].state) for sample in ps]
+    y = [sample[1] for sample in ps]
+    return np.array(X),np.array(y)
+

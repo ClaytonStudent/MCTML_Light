@@ -1,39 +1,30 @@
-from Basic import name_parameter,name_model,names
+from search_space import data_actions,feature_actions,classifier_actions,check_list
+import copy        
 
-
-class State:
-    def __init__(self,path=[],actions=names,level=0):
-        self.path = path
-        self.actions = actions
-        self.level = level
-    
-    def update_action(self,action):
-        if self.level == 0:
-            model_name = action
-            model_parameter = name_parameter[model_name]
-            actions = model_parameter[list(model_parameter.keys())[0]]
-        elif self.level >= len(name_parameter[self.path[0]]):
-            actions = None
+class State():
+    def __init__(self,state=[],actions= data_actions):
+        self.state = state
+        self.actions = data_actions
+        self.depth = 0
+        
+    def update_state(self,action):
+        
+        next_state = copy.deepcopy(self)
+        
+        if self.depth == 0:
+            next_state.actions = feature_actions
+            next_state.state.append(action)   
+        elif self.depth == 1:
+            next_state.actions = classifier_actions
+            next_state.state.append(action) 
+        elif self.depth in [2,3,4]:
+            selected_method = next_state.state[next_state.depth-2]
+            selected_method = check_list[selected_method]
+            next_state.actions = selected_method.search_space
+            next_state.state.append(action) 
         else:
-            model_name = self.path[0]
-            model_parameter = name_parameter[model_name]
-            actions = model_parameter[list(model_parameter.keys())[self.level]]
-        return actions
-    
-    def update(self,action):
-        
-        path = self.path + [action]
-        actions = self.update_action(action)
-        level = self.level + 1
-        return State(path=path,actions=actions,level=level)
-        
-    def update_self(self,action):
-        self.path += [action]
-        self.actions = self.update_action(action)
-        self.level += 1
-    
-        
-        
-    #def delete_state_info(self,index):
-    #    self.path = self.path[:index+1] + self.path[index+2:]
-    #    self.lvele -=1
+            next_state.actions = None
+            next_state.state.append(action)
+            
+        next_state.depth +=1 
+        return next_state
