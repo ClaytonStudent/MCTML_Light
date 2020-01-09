@@ -9,17 +9,21 @@ def child_visit_times(node):
 # find the best parameter and score
 def find_best(agent):
     paths = agent.mcts._storage.ps
+    if len(paths) < 1:
+	    return "No",0
     scores = [ps[1] for ps in paths]
     best = paths[scores.index(max(scores))]
     return best[0],best[1]
 
-def save_score(k,score):
-    text_file = open("Storage/model.txt", "a")
+def save_score(name,k,score):
+    print('Saving best score to ',name)
+    text_file = open("Storage_2/"+name+".txt", "a")
     text_file.write("Min:{}, Score:{}".format(k,score) + '\n')
     text_file.close()
 
 def save_model(name,params,score):
-    text_file = open("Storage/model.txt", "a")
+    print('Saving best model to ',name)
+    text_file = open("Storage_2/"+name+".txt", "a")
     text_file.write("Name:{}".format(name) + '\n' + 
                     "Best Parameter: {} ".format(params) + '\n' + 
                     "Best Score: {}".format(score) + '\n' + '\n' + '\n')

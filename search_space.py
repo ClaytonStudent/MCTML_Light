@@ -1,4 +1,5 @@
 import copy
+from initialization import initialization
 # Classifier 
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -52,7 +53,8 @@ class BasePerprocessor():
         self.name = name
         self.model = model
         self.hyper_parameters = hyper_parameters
-        self.search_space = smart_init(self.hyper_parameters)
+        #self.search_space = smart_init(self.hyper_parameters)
+        self.search_space = initialization(self.hyper_parameters)
         
     def update(self,hypers):
         #self.model = self.model.set_params(**hypers)
@@ -68,7 +70,7 @@ class BasePerprocessor():
         self.model.predict(X)
 
 ## Data Preprocessing
-quantile = BasePerprocessor(name='norm',model=QuantileTransformer(),hyper_parameters={'n_quantiles':(10,2000),'output_distribution':['uniform','normal']})
+quantile = BasePerprocessor(name='quantile',model=QuantileTransformer(),hyper_parameters={'n_quantiles':(10,2000),'output_distribution':['uniform','normal']})
 norm = BasePerprocessor(name='norm',model=Normalizer(),hyper_parameters={'norm':['l1','l2','max']})
 minmax = BasePerprocessor(name='MinMax',model = MinMaxScaler(),hyper_parameters={'feature_range': [(0, 1)]})
 robust = BasePerprocessor(name='robust',model=RobustScaler(),hyper_parameters={'quantile_range': [(25.0, 75.0),(30.0,70.0)]})
@@ -174,8 +176,8 @@ rf = BasePerprocessor(name='RF',
 
 data_actions = ['quantile','robust','norm','minmax']
 feature_actions = ['kernel_pca','polynomial','pca','fastica']
-classifier_actions = ['knn','decision_tree','extra_tree','ada','bernou','gaussian_nb',
-                      'gradient_boost','lda','lsvc','svc','mnb','passiv_aggressive','qda','rf']
+classifier_actions = ['knn','decision_tree','extra_tree','ada','bernou',
+                      'lda','lsvc','svc','mnb','passiv_aggressive','qda','rf']
 
 check_list = {'quantile':quantile,'robust':robust,'norm':norm,'minmax':minmax,
               'kernel_pca':kernel_pca,'polynomial':polynomial,'pca':pca,'fastica':fastica,
